@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#0f172a"/>
+  <circle cx="256" cy="256" r="180" fill="#1e293b" stroke="#f59e0b" stroke-width="16"/>
+  <!-- Clock hands & lightning bolt badge -->
+  <line x1="256" y1="256" x2="256" y2="130" stroke="#f8fafc" stroke-width="20" stroke-linecap="round"/>
+  <line x1="256" y1="256" x2="340" y2="256" stroke="#f59e0b" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="256" cy="256" r="22" fill="#f59e0b"/>
+  <!-- Lightning Bolt -->
+  <path d="M280 40 L210 240 L270 240 L230 460 L350 210 L280 210 Z" fill="#fbbf24" opacity="0.9"/>
+</svg>
