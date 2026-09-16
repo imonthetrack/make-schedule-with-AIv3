@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Jadwal Kilat & Rest Guard</title>
+    <title>make-schedule-with-AI</title>
     <meta name="description" content="Aplikasi jadwal cepat anti-malas dengan preset 1-klik, fitur shift 15 menit, rest guard alarm timer, dan streak harian." />
     
     <!-- PWA & Mobile Web App Meta -->
@@ -12,17 +12,51 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Jadwal Kilat" />
+    <meta name="apple-mobile-web-app-title" content="make-schedule-with-AI" />
     <link rel="apple-touch-icon" href="./icon-192.svg" />
     <link rel="icon" type="image/svg+xml" href="./icon-192.svg" />
     
     <!-- Open Graph -->
-    <meta property="og:title" content="Jadwal Kilat & Rest Guard" />
+    <meta property="og:title" content="make-schedule-with-AI" />
     <meta property="og:description" content="Aplikasi jadwal cepat anti-malas dengan preset 1-klik, fitur shift 15 menit, rest guard alarm timer, dan streak harian." />
     <meta property="og:image" content="./icon-512.svg" />
   </head>
   <body class="bg-slate-100/90 text-slate-800 antialiased selection:bg-amber-200 overflow-x-hidden min-h-screen">
     <div id="root"></div>
+    <!-- Deteksi jika dibuka langsung sebagai file:// (double-click di Windows Explorer) -->
+    <script>
+      if (window.location.protocol === 'file:') {
+        window.addEventListener('DOMContentLoaded', function() {
+          var root = document.getElementById('root');
+          if (root && (!root.innerHTML || root.innerHTML.trim() === '')) {
+            root.innerHTML = '<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; padding: 24px; box-sizing: border-box;">' +
+              '<div style="max-width: 560px; width: 100%; background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 28px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">' +
+                '<div style="font-size: 36px; margin-bottom: 12px;">💡</div>' +
+                '<h1 style="font-size: 20px; font-weight: 700; color: #fbbf24; margin: 0 0 10px 0;">Aplikasi Memerlukan Web Server Lokal atau Tautan Online</h1>' +
+                '<p style="font-size: 14px; color: #cbd5e1; line-height: 1.6; margin: 0 0 20px 0;">' +
+                  'File HTML ini dibuka langsung dari folder unduhan (<code>file:///</code>). Browser modern (seperti Chrome) secara otomatis memblokir modul JavaScript dan file TypeScript (<code>.tsx</code>) jika dibuka tanpa web server demi alasan keamanan (CORS policy).' +
+                '</p>' +
+                '<div style="background: #0f172a; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;">' +
+                  '<div style="font-weight: 600; font-size: 13px; color: #93c5fd; margin-bottom: 6px;">Cara 1: Gunakan Versi Online (Paling Praktis)</div>' +
+                  '<p style="font-size: 12px; color: #94a3b8; margin: 0 0 10px 0;">Aplikasi sudah aktif dan dapat diakses langsung tanpa instalasi apa pun:</p>' +
+                  '<a href="https://ais-pre-gzo3icrfvdr4z5a7lc42do-622745663415.asia-southeast1.run.app" target="_blank" style="display: inline-block; background: #3b82f6; color: white; font-size: 13px; font-weight: 600; text-decoration: none; padding: 8px 16px; border-radius: 8px;">Buka Versi Online &rarr;</a>' +
+                '</div>' +
+                '<div style="background: #0f172a; border-left: 4px solid #10b981; border-radius: 8px; padding: 14px 16px;">' +
+                  '<div style="font-weight: 600; font-size: 13px; color: #6ee7b7; margin-bottom: 6px;">Cara 2: Jalankan di Laptop / Komputer Lokal</div>' +
+                  '<ol style="margin: 0; padding-left: 18px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">' +
+                    '<li>Klik dua kali file <b>start-app.bat</b> di folder ini.</li>' +
+                    '<li>Atau buka Terminal / Command Prompt di folder ini, lalu ketik:<br>' +
+                      '<div style="background: #1e293b; color: #fbbf24; font-family: monospace; padding: 6px 10px; border-radius: 6px; margin: 6px 0;">npm install<br>npm run dev</div>' +
+                    '</li>' +
+                    '<li>Buka <b>http://localhost:3000</b> di browser Anda.</li>' +
+                  '</ol>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          }
+        });
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

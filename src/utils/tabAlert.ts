@@ -6,7 +6,7 @@
  * and dynamically swaps the Favicon when the user is on another tab (e.g. YouTube).
  */
 
-let originalTitle = typeof document !== 'undefined' ? document.title || 'Jadwal Kilat' : 'Jadwal Kilat';
+let originalTitle = typeof document !== 'undefined' ? document.title || 'make-schedule-with-AI' : 'make-schedule-with-AI';
 let strobeInterval: number | null = null;
 let isStrobeActive = false;
 
@@ -52,7 +52,7 @@ export function startTabStrobeAlert(taskTitle: string, time: string) {
 
   // Save original title if not already active
   if (!isStrobeActive) {
-    originalTitle = document.title || 'Jadwal Kilat & Rest Guard';
+    originalTitle = document.title || 'make-schedule-with-AI';
   }
 
   stopTabStrobeAlert(); // reset if already running

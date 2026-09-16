@@ -1,13 +1,11 @@
 /**
- * Jadwal Kilat & Rest Guard - Service Worker
+ * make-schedule-with-AI - Service Worker
  * Handles High-Impact Background Notifications (with Large Image Banners & Rich Actions),
  * Scheduled Timers (Drift-free OS Pop-ups on Other Tabs/Lock Screen), and Tab Focus.
  */
 
-const CACHE_NAME = 'jadwal-kilat-pwa-v3';
+const CACHE_NAME = 'jadwal-kilat-pwa-v4';
 const PRECACHE_ASSETS = [
-  '/',
-  '/index.html',
   '/manifest.json',
   '/icon-192.svg',
   '/icon-512.svg',
@@ -18,18 +16,18 @@ const PRECACHE_ASSETS = [
 // Active Background Timers Queue (Runs in Service Worker Thread independently of DOM throttling)
 const activeTimers = new Map();
 
-// 1. Install Event: Cache Core App Shell & Skip Waiting immediately
+// 1. Install Event: Precache static icons and skip waiting immediately
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(PRECACHE_ASSETS).catch((err) => {
-        console.warn('[ServiceWorker] Precache failed, continuing online:', err);
+        console.warn('[ServiceWorker] Precache warning:', err);
       });
     }).then(() => self.skipWaiting())
   );
 });
 
-// 2. Activate Event: Claim all clients immediately so background notifications work right away
+// 2. Activate Event: Delete all old caches and claim clients immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -45,23 +43,44 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// 3. Fetch Event: Cache-First for static, Network-First for dynamic
+// 3. Fetch Event: Only cache static icons & manifest, NEVER intercept HTML or scripts
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  const url = new URL(event.request.url);
+
+  // Always bypass Service Worker for navigation (HTML), Vite scripts, and API calls
+  if (
+    event.request.mode === 'navigate' ||
+    url.pathname.startsWith('/api') ||
+    url.pathname.startsWith('/src') ||
+    url.pathname.startsWith('/@') ||
+    url.pathname.includes('node_modules') ||
+    url.pathname.endsWith('.html') ||
+    url.pathname.endsWith('.tsx') ||
+    url.pathname.endsWith('.ts') ||
+    url.pathname.endsWith('.js')
+  ) {
+    return;
+  }
+
+  // Cache static image & manifest assets only
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        fetch(event.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse);
-            });
-          }
-        }).catch(() => {});
         return cachedResponse;
       }
-      return fetch(event.request);
+      return fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return networkResponse;
+      }).catch(() => {
+        return cachedResponse;
+      });
     })
   );
 });

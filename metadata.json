@@ -1,5 +1,5 @@
 {
-  "name": "Jadwal Kilat & Rest Guard",
+  "name": "make-schedule-with-AI",
   "description": "Aplikasi jadwal cepat anti-malas dengan preset 1-klik, fitur shift 15 menit, rest guard alarm timer, dan streak harian.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

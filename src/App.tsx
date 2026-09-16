@@ -411,7 +411,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-100/90 text-slate-800 antialiased selection:bg-amber-200">
       {/* Persistent Sticky Continuous Hobby Alarm Bar (stops when user clicks BERHENTI) */}
-      <ActiveHobbyAlarmBar onCompleteTask={handleToggleComplete} />
+      <ActiveHobbyAlarmBar onMarkTaskCompleted={handleToggleComplete} />
 
       {/* Top Banner: Inform user if in Iframe to ensure OS popups work on Lock Screen & background */}
       {showIframeNotice && (
@@ -543,7 +543,7 @@ export default function App() {
             {/* Mobile/Tablet Footer */}
             <footer className="lg:hidden text-center pt-2 pb-6 text-xs text-slate-400 space-y-1">
               <p className="font-medium">💾 Data tersimpan otomatis di LocalStorage & IndexedDB (Rp0)</p>
-              <p className="text-[11px] text-slate-400">Jadwal Kilat Precision Engine • Siap Akses di Semua Perangkat</p>
+              <p className="text-[11px] text-slate-400">make-schedule-with-AI • Siap Akses di Semua Perangkat</p>
             </footer>
           </section>
         </div>
@@ -595,10 +595,15 @@ export default function App() {
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
         initialMode={aiModalMode}
-        activeTask={aiActiveTask}
-        allTasks={schedule}
-        onApplyMicroStep={handleApplyMicroStep}
-        onApplyReschedule={handleApplyReschedule}
+        selectedTask={aiActiveTask || null}
+        onApplyMicroStepToTask={handleApplyMicroStep}
+        onApplyShiftSchedule={(minutes) => {
+          if (aiActiveTask) {
+            handleApplyReschedule(aiActiveTask.id, minutes);
+          } else {
+            handleShiftAll(minutes, `+${minutes}m`);
+          }
+        }}
       />
 
       {/* 🚀 Fokus Cepat & Study Tools Modal */}

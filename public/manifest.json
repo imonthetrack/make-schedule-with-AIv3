@@ -1,6 +1,6 @@
 {
-  "name": "Jadwal Kilat & Rest Guard",
-  "short_name": "Jadwal Kilat",
+  "name": "make-schedule-with-AI",
+  "short_name": "make-schedule-with-AI",
   "description": "Atur jadwal harian & alarm istirahat akurat anti-offside dengan PWA Offline-first.",
   "start_url": "/",
   "display": "standalone",

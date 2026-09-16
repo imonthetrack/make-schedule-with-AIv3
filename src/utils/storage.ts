@@ -65,7 +65,14 @@ export function loadSchedule(): ScheduleItem[] {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+        return parsed.map((item, idx) => ({
+          ...item,
+          id: item.id || `item-restored-${idx}`,
+          time: typeof item.time === 'string' && item.time.includes(':') ? item.time : '07:00',
+          title: item.title || 'Kegiatan',
+          completed: Boolean(item.completed),
+          category: item.category || 'work',
+        }));
       }
     }
   } catch (err) {

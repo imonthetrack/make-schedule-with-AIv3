@@ -35,29 +35,34 @@ export function useNotification() {
 
     setPermission(Notification.permission);
 
-    // Register Service Worker if supported
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          setIsSwRegistered(true);
-          console.log('[PWA] Service Worker ready on scope:', registration.scope);
-        })
-        .catch((error) => {
-          console.warn('[PWA] Service Worker registration failed:', error);
-        });
+    // Register Service Worker only in standalone/top-level window
+    const inIframe = isIframeEnvironment();
+    if (!inIframe && 'serviceWorker' in navigator) {
+      try {
+        navigator.serviceWorker
+          .register('/sw.js')
+          .then((registration) => {
+            setIsSwRegistered(true);
+            console.log('[PWA] Service Worker ready on scope:', registration.scope);
+          })
+          .catch((error) => {
+            console.warn('[PWA] Service Worker registration failed:', error);
+          });
 
-      // Listen to SW messages (e.g. when notification is clicked)
-      const handleSwMessage = (event: MessageEvent) => {
-        if (event.data && event.data.type === 'NOTIFICATION_CLICKED') {
-          console.log('[PWA] Notification clicked by user:', event.data);
-        }
-      };
+        // Listen to SW messages (e.g. when notification is clicked)
+        const handleSwMessage = (event: MessageEvent) => {
+          if (event.data && event.data.type === 'NOTIFICATION_CLICKED') {
+            console.log('[PWA] Notification clicked by user:', event.data);
+          }
+        };
 
-      navigator.serviceWorker.addEventListener('message', handleSwMessage);
-      return () => {
-        navigator.serviceWorker.removeEventListener('message', handleSwMessage);
-      };
+        navigator.serviceWorker.addEventListener('message', handleSwMessage);
+        return () => {
+          navigator.serviceWorker.removeEventListener('message', handleSwMessage);
+        };
+      } catch (err) {
+        console.warn('[PWA] SW register exception caught:', err);
+      }
     }
   }, []);
 

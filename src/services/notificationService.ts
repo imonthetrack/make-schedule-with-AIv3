@@ -136,6 +136,22 @@ export async function triggerSystemNotification(
 }
 
 /**
+ * Safe helper to get active registration without hanging in iframes
+ */
+async function getActiveRegistration(): Promise<ServiceWorkerRegistration | null> {
+  if (isIframeEnvironment()) return null;
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return null;
+  try {
+    return await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 800)),
+    ]);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * 3. Schedule Background Timer in Service Worker
  */
 export async function scheduleBackgroundTimer(
@@ -145,24 +161,22 @@ export async function scheduleBackgroundTimer(
   body: string,
   vibrate: number[] = [400, 150, 400, 150, 600, 200, 800]
 ) {
-  if ('serviceWorker' in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      if (registration.active) {
-        registration.active.postMessage({
-          type: 'SCHEDULE_TIMER',
-          timerId,
-          targetTimestamp,
-          title,
-          body,
-          vibrate,
-          image: timerId.includes('rest') ? '/rest-banner.svg' : '/alert-banner.svg',
-        });
-        console.log(`[NotificationService] Scheduled SW timer for ${timerId}`);
-      }
-    } catch (err) {
-      console.warn('Gagal menjadwalkan timer background di Service Worker:', err);
+  try {
+    const registration = await getActiveRegistration();
+    if (registration && registration.active) {
+      registration.active.postMessage({
+        type: 'SCHEDULE_TIMER',
+        timerId,
+        targetTimestamp,
+        title,
+        body,
+        vibrate,
+        image: timerId.includes('rest') ? '/rest-banner.svg' : '/alert-banner.svg',
+      });
+      console.log(`[NotificationService] Scheduled SW timer for ${timerId}`);
     }
+  } catch (err) {
+    console.warn('Gagal menjadwalkan timer background di Service Worker:', err);
   }
 }
 
@@ -170,19 +184,17 @@ export async function scheduleBackgroundTimer(
  * 4. Cancel Background Timer in Service Worker
  */
 export async function cancelBackgroundTimer(timerId: string) {
-  if ('serviceWorker' in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      if (registration.active) {
-        registration.active.postMessage({
-          type: 'CANCEL_TIMER',
-          timerId,
-        });
-        console.log(`[NotificationService] Cancelled SW timer for ${timerId}`);
-      }
-    } catch (err) {
-      console.warn('Gagal membatalkan timer background di Service Worker:', err);
+  try {
+    const registration = await getActiveRegistration();
+    if (registration && registration.active) {
+      registration.active.postMessage({
+        type: 'CANCEL_TIMER',
+        timerId,
+      });
+      console.log(`[NotificationService] Cancelled SW timer for ${timerId}`);
     }
+  } catch (err) {
+    console.warn('Gagal membatalkan timer background di Service Worker:', err);
   }
 }
 
@@ -190,17 +202,15 @@ export async function cancelBackgroundTimer(timerId: string) {
  * 5. Sync Daily Schedule to Service Worker for Automatic Background Alerts
  */
 export async function syncBackgroundTasks(schedules: Array<{ id: string; time: string; title: string; completed?: boolean }>) {
-  if ('serviceWorker' in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      if (registration.active) {
-        registration.active.postMessage({
-          type: 'SCHEDULE_TASKS',
-          schedules,
-        });
-      }
-    } catch (err) {
-      console.warn('Gagal sinkronisasi jadwal ke Service Worker:', err);
+  try {
+    const registration = await getActiveRegistration();
+    if (registration && registration.active) {
+      registration.active.postMessage({
+        type: 'SCHEDULE_TASKS',
+        schedules,
+      });
     }
+  } catch (err) {
+    console.warn('Gagal sinkronisasi jadwal ke Service Worker:', err);
   }
 }
