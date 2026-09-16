@@ -4,13 +4,13 @@
  * Scheduled Timers (Drift-free OS Pop-ups on Other Tabs/Lock Screen), and Tab Focus.
  */
 
-const CACHE_NAME = 'jadwal-kilat-pwa-v4';
+const CACHE_NAME = 'jadwal-kilat-pwa-v5';
 const PRECACHE_ASSETS = [
-  '/manifest.json',
-  '/icon-192.svg',
-  '/icon-512.svg',
-  '/alert-banner.svg',
-  '/rest-banner.svg',
+  './manifest.json',
+  './icon-192.svg',
+  './icon-512.svg',
+  './alert-banner.svg',
+  './rest-banner.svg',
 ];
 
 // Active Background Timers Queue (Runs in Service Worker Thread independently of DOM throttling)

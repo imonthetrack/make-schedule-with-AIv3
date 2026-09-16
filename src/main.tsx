@@ -23,7 +23,7 @@ try {
     window.addEventListener('load', () => {
       try {
         navigator.serviceWorker
-          .register('/sw.js')
+          .register('./sw.js')
           .then((reg) => {
             reg.update().catch(() => {});
           })

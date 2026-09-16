@@ -40,7 +40,7 @@ export function useNotification() {
     if (!inIframe && 'serviceWorker' in navigator) {
       try {
         navigator.serviceWorker
-          .register('/sw.js')
+          .register('./sw.js')
           .then((registration) => {
             setIsSwRegistered(true);
             console.log('[PWA] Service Worker ready on scope:', registration.scope);
